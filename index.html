@@ -1,0 +1,216 @@
+import { useState } from "react";
+
+const files = {
+  "index.html": `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Little Corner</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>`,
+
+  "package.json": `{
+  "name": "my-little-corner",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.2.0"
+  }
+}`,
+
+  "vite.config.js": `import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+})`,
+
+  "src/main.jsx": `import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)`,
+
+  "src/index.css": `/* empty */`,
+};
+
+const steps = [
+  {
+    num: "1",
+    title: "Download VS Code (free text editor)",
+    desc: "You need this to create and edit files.",
+    link: "https://code.visualstudio.com/",
+    linkLabel: "Download VS Code →",
+    detail: "Install it like any normal app. This is a one-time step."
+  },
+  {
+    num: "2",
+    title: "Create a GitHub account",
+    desc: "This is where your code lives online.",
+    link: "https://github.com/signup",
+    linkLabel: "Sign up for GitHub →",
+    detail: "Free account is all you need."
+  },
+  {
+    num: "3",
+    title: "Create a Vercel account",
+    desc: "This is what puts your app on the internet.",
+    link: "https://vercel.com/signup",
+    linkLabel: "Sign up for Vercel →",
+    detail: "Choose 'Continue with GitHub' so they connect automatically."
+  },
+  {
+    num: "4",
+    title: "Create the project folder",
+    desc: "On your Desktop, create a new folder called my-little-corner. Inside it, create a folder called src.",
+    detail: "You should have: Desktop/my-little-corner/src/"
+  },
+  {
+    num: "5",
+    title: "Create the files",
+    desc: "Copy each file below and save it in the right location.",
+    detail: "Use the file panel on the right. Click each file, copy the content, open VS Code, create that file, paste, save."
+  },
+  {
+    num: "6",
+    title: "Upload to GitHub",
+    desc: "Go to github.com → New Repository → name it my-little-corner → Create.",
+    detail: "Then click 'uploading an existing file' link, drag your entire my-little-corner folder in, click Commit."
+  },
+  {
+    num: "7",
+    title: "Deploy on Vercel",
+    desc: "Go to vercel.com → Add New Project → select my-little-corner → Deploy.",
+    link: "https://vercel.com/new",
+    linkLabel: "Go to Vercel →",
+    detail: "In ~60 seconds you'll get a live URL like my-little-corner.vercel.app 🎉"
+  },
+];
+
+const P = {
+  bg: "#F5F0E8", card: "#FFFDF8", border: "#DED3C2",
+  text: "#2F343A", sub: "#6B7280", muted: "#A09080",
+  accent: "#8CA98D", light: "#EFE6D5",
+};
+
+export default function Guide() {
+  const [activeFile, setActiveFile] = useState("index.html");
+  const [copied, setCopied] = useState(false);
+
+  const copy = () => {
+    navigator.clipboard.writeText(files[activeFile]);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div style={{ fontFamily: "'Manrope', sans-serif", background: P.bg, minHeight: "100vh", padding: "24px 16px", color: P.text }}>
+      <div style={{ maxWidth: 860, margin: "0 auto" }}>
+
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <h1 style={{ fontSize: 26, fontWeight: 600, color: P.text, marginBottom: 6 }}>Deploy My Little Corner</h1>
+          <p style={{ fontSize: 14, color: P.muted }}>No terminal. No coding experience needed. Just follow the steps.</p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, alignItems: "start" }}>
+
+          {/* LEFT: Steps */}
+          <div>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: P.muted, marginBottom: 12 }}>Steps</p>
+            {steps.map(s => (
+              <div key={s.num} style={{ background: P.card, border: `1px solid ${P.border}`, borderRadius: 14, padding: "14px 16px", marginBottom: 10 }}>
+                <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: P.accent, color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, flexShrink: 0 }}>{s.num}</div>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: P.text, marginBottom: 4 }}>{s.title}</p>
+                    <p style={{ fontSize: 12.5, color: P.sub, lineHeight: 1.6, marginBottom: 6 }}>{s.desc}</p>
+                    <p style={{ fontSize: 11.5, color: P.muted, lineHeight: 1.6, fontStyle: "italic" }}>{s.detail}</p>
+                    {s.link && (
+                      <a href={s.link} target="_blank" rel="noreferrer" style={{ display: "inline-block", marginTop: 8, fontSize: 12, color: P.accent, fontWeight: 600, textDecoration: "none", border: `1px solid ${P.accent}`, borderRadius: 8, padding: "4px 12px" }}>
+                        {s.linkLabel}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* RIGHT: Files */}
+          <div style={{ position: "sticky", top: 16 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: P.muted, marginBottom: 12 }}>Files to create</p>
+            <div style={{ background: P.card, border: `1px solid ${P.border}`, borderRadius: 14, overflow: "hidden" }}>
+              {/* file tabs */}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 0, borderBottom: `1px solid ${P.border}`, padding: "8px 10px", background: P.light }}>
+                {Object.keys(files).map(f => (
+                  <button key={f} onClick={() => setActiveFile(f)} style={{ background: activeFile === f ? P.card : "transparent", border: activeFile === f ? `1px solid ${P.border}` : "1px solid transparent", borderRadius: 7, padding: "3px 10px", fontSize: 11, color: activeFile === f ? P.text : P.muted, cursor: "pointer", marginRight: 4, marginBottom: 4, fontFamily: "monospace" }}>
+                    {f}
+                  </button>
+                ))}
+              </div>
+
+              {/* file location hint */}
+              <div style={{ padding: "8px 14px", borderBottom: `1px solid ${P.border}`, background: "#FDFAF5" }}>
+                <p style={{ fontSize: 11, color: P.muted, fontFamily: "monospace" }}>
+                  📁 {activeFile.includes("/") ? `my-little-corner/${activeFile}` : `my-little-corner/${activeFile}`}
+                </p>
+              </div>
+
+              {/* file content */}
+              <div style={{ position: "relative" }}>
+                <pre style={{ margin: 0, padding: "14px", fontSize: 11, lineHeight: 1.6, color: P.sub, overflowX: "auto", maxHeight: 320, overflowY: "auto", background: P.card, fontFamily: "monospace", whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
+                  {files[activeFile]}
+                </pre>
+                <button onClick={copy} style={{ position: "absolute", top: 10, right: 10, background: copied ? P.accent : P.light, color: copied ? "white" : P.sub, border: `1px solid ${P.border}`, borderRadius: 8, padding: "4px 12px", fontSize: 11, cursor: "pointer", fontFamily: "sans-serif", transition: "all .2s" }}>
+                  {copied ? "Copied!" : "Copy"}
+                </button>
+              </div>
+            </div>
+
+            {/* App.jsx note */}
+            <div style={{ marginTop: 12, background: "#FFF8F0", border: `1px solid #E8D8C0`, borderRadius: 12, padding: "12px 14px" }}>
+              <p style={{ fontSize: 12, fontWeight: 600, color: P.text, marginBottom: 4 }}>src/App.jsx — the main file</p>
+              <p style={{ fontSize: 11.5, color: P.sub, lineHeight: 1.6 }}>
+                This is the big file. Go to the <strong>My Little Corner</strong> artifact in this chat, click the <strong>copy icon</strong> at the top right of the artifact panel, and paste it into <code style={{ background: P.light, padding: "1px 5px", borderRadius: 4 }}>src/App.jsx</code>.
+              </p>
+              <p style={{ fontSize: 11.5, color: P.sub, lineHeight: 1.6, marginTop: 6 }}>
+                Then find and replace this block at the top:
+              </p>
+              <pre style={{ fontSize: 10.5, background: P.light, borderRadius: 8, padding: "8px 10px", marginTop: 6, lineHeight: 1.6, whiteSpace: "pre-wrap", wordBreak: "break-all", color: "#C07060" }}>{`const MEM={};
+const S={
+  get:(k,fb=null)=>{try{return MEM[k]!==undefined?MEM[k]:fb;}catch{return fb;}},
+  set:(k,v)=>{try{MEM[k]=v;}catch{}},
+};`}</pre>
+              <p style={{ fontSize: 11, color: P.muted, margin: "6px 0 4px" }}>Replace with:</p>
+              <pre style={{ fontSize: 10.5, background: P.light, borderRadius: 8, padding: "8px 10px", lineHeight: 1.6, whiteSpace: "pre-wrap", wordBreak: "break-all", color: P.accent }}>{`const S={
+  get:(k,fb=null)=>{try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):fb;}catch{return fb;}},
+  set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}},
+};`}</pre>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}
